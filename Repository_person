@@ -1,0 +1,114 @@
+ARQUIVO 1
+namespace ams_heranca_repository{
+class Customer
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+
+        public Customer(string name, string email)
+        {
+            Name = name;
+            Email = email;
+        }
+    }
+}
+
+ARQUIVO 2
+namespace ams_heranca_repository{
+ class CustomerRepository : IRepositoryBase<Customer>{
+        private List<Customer> customers = new List<Customer>();
+
+        public void Add(Customer customer){
+            customers.Add(customer);
+        }
+
+        public List<Customer> GetAll(){
+            return customers;
+        }
+
+        public void SendMail(){
+            Console.WriteLine("Envio de mensagens electrónicas aos clientes...");
+        }
+    }
+}
+
+ARQUIVO 3
+namespace ams_heranca_repository{
+class ProductRepository : IRepositoryBase<Product>{
+        private List<Product> products = new List<Product>();
+
+        public void Add(Product product){
+            products.Add(product);
+        }
+
+        public List<Product> GetAll(){
+            return products;
+        }
+
+        public void SendMail(){
+            Console.WriteLine("Envio de correio electrónico aos fornecedores de produtos...");
+        }
+    }
+}
+
+ARQUIVO 4
+namespace ams_heranca_repository{
+class Product{
+        public string Name { get; set; }
+        public string Price { get; set; }
+
+        public Product(string name, string price)
+        {
+            Name = name;
+            Price = price;
+        }
+    }
+}
+
+ARQUIVO 5(Program)
+using System;
+using System.Collections.Generic;
+
+namespace ams_heranca_repository{
+    class Program{
+        static void Main(string[] args){
+            CustomerRepository customerRepository = new CustomerRepository();
+            ProductRepository productRepository = new ProductRepository();
+
+            Customer customer1 = new Customer("João Miguel", "joao.souza914@etec.gov.sp.br");
+            Customer customer2 = new Customer("Axel", "axel.leonardo@gmail.com");
+
+            customerRepository.Add(customer1);
+            customerRepository.Add(customer2);
+
+            Console.WriteLine("Customers:");
+            var customers = customerRepository.GetAll();
+            foreach (var customer in customers){
+                Console.WriteLine($"Nome da pessoa: {customer.Name}, Email: {customer.Email}");
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+
+            Product product1 = new Product("Maçã", "R$5.40 o kilo");
+            Product product2 = new Product("Banana", "R$7.90 o kilo");
+
+            productRepository.Add(product1);
+            productRepository.Add(product2);
+            Console.WriteLine($"----------------------------------------------------");
+            Console.WriteLine($"");
+            Console.WriteLine("Products:");
+            var products = productRepository.GetAll();
+            foreach (var product in products){
+                Console.WriteLine($"Nome do produto: {product.Name}, Valor: {product.Price:C}");
+                Console.WriteLine();
+            }
+        }
+    }
+
+    interface IRepositoryBase<T>{
+        void Add(T entity);
+        List<T> GetAll();
+        void SendMail();
+    }
+}
